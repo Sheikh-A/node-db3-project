@@ -14,6 +14,19 @@ router.get('/', (req, res) => {
   });
 });
 
+router.get('/steps', (req, res) => {
+  Schemes.findAllSteps()
+  .then(steps => {
+    res.json(steps);
+  })
+  .catch(err => {
+    res.status(500).json({ message: 'Failed to get step' });
+  });
+});
+
+
+
+
 router.get('/:id', (req, res) => {
   const { id } = req.params;
 
@@ -29,6 +42,26 @@ router.get('/:id', (req, res) => {
     res.status(500).json({ message: 'Failed to get schemes' });
   });
 });
+//return [] if id not found
+
+router.get('/alt/:id', (req, res) => {
+  const { id } = req.params;
+
+  Schemes.findByIdAlt(id)
+  .then(scheme => {
+    if (scheme) {
+      res.json(scheme);
+    } else {
+      res.status(404).json({ message: 'Could not find scheme with given id.' })
+    }
+  })
+  .catch(err => {
+    res.status(500).json({ message: 'Failed to get schemes' });
+  });
+});
+//returns { "message": "Could not find scheme with given id."}
+
+
 
 router.get('/:id/steps', (req, res) => {
   const { id } = req.params;
